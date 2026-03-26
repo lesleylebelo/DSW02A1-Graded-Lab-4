@@ -1,62 +1,84 @@
 body {
-      background-color: white;
-    }
+  background-color: white;
+  color: black;
+}
 
-    #counter {
-      font-weight: bold;
-    }
+h1 {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 1.6em;
+  color: #222;
+  padding-bottom: 0.4em;
+}
 
-    #pics, #favourites {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 10px;
-      background: #fff;
-      border: 2px solid black;
-    }
+h1 img.mandela {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
 
-    .pic-wrapper {
-      position: relative;
-      display: inline-block;
-      cursor: pointer;
-    }
+#pics {
+  padding: 12px;
+  background: white;
+  border: 2px solid black;
+}
 
-    .pic-wrapper img {
-      width: 120px;
-      height: 100px;
-      object-fit: cover;
-      border: 3px solid transparent;
-      border-radius: 6px;
-      transition: border 0.2s;
-      display: block;
-    }
+img.mandela {
+  width: 120px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 3px solid transparent;
+  cursor: pointer;
+}
 
-    .pic-wrapper img.selected {
-      border-color: green;
-    }
+img.mandela:hover {
+  transform: scale(1.05);
+}
 
-    .pic-label {
-      text-align: center;
-      color: black;
-      margin-top: 3px;
-    }
+img.mandela.selected {
+  border-color: green;
+}
 
-    #actions {
-      background: white;
-      border: 1px solid black;
-      border-radius: 6px;
-      padding: 0.8em 1.5em;
-      min-height: 40px;
-    }
+#favorites {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 16px;
+  background:white;
+  border: 2px solid black;
+  border-radius: 8px;
+  min-height: 120px;
+  margin-bottom: 1em;
+}
 
-    #actions li {
-      margin-bottom: 0.3em;
-      color: black;
-    }
+#favorites legend {
+  font-weight: bold;
+  color:black;
+}
 
-    #confirmation {
-      font-weight: bold;
-      color: green;
-      margin-top: 0.5em;
-      font-size: 1em;
-    }
+#counter {
+  font-weight: bold;
+  color: black;
+}
+
+#confirmation {
+  font-weight: bold;
+  color: green;
+}
+
+#actions {
+  background: white;
+  border: 1px solid black;
+  border-radius: 6px;
+  padding: 0.6em 1.5em;
+  min-height: 30px;
+}
+
+#actions li {
+  margin-bottom: 0.3em;
+  color: black;
+  font-size: 0.95em;
+}
+

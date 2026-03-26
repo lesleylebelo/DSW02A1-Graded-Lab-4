@@ -1,38 +1,42 @@
-
 (function () {
-  const totalImages = 6;
-  let favouriteCount = 0;         // how many pictures are added to favorites
-  let remaining = totalImages;    // how many pictures are remaining
+  const total = 6;
+  let favouriteCount = 0;
+  let remaining = total;
 
-  
-  const originalOrder = {};       
+  const originalOrder = {};
 
   document.addEventListener('DOMContentLoaded', function () {
     const picsDiv = document.getElementById('pics');
-    const wrappers = picsDiv.querySelectorAll('.pic-wrapper');
+    const favDiv  = document.getElementById('favorites');
 
-    wrappers.forEach(function (wrapper, index) {
-      const img = wrapper.querySelector('img');
-      originalOrder[img.id] = index;
+    const counter = document.createElement('p');
+    counter.id = 'counter';
+    counter.innerHTML = 'Images remaining: <span id="remaining-count">' + total + '</span>';
+    picsDiv.parentNode.insertBefore(counter, picsDiv.nextSibling);
+
+    const confirmation = document.createElement('p');
+    confirmation.id = 'confirmation';
+    document.getElementById('actions').parentNode.insertBefore(confirmation, document.getElementById('actions'));
+
+    const imgs = picsDiv.querySelectorAll('img.mandela');
+    imgs.forEach(function (img, i) {
+      originalOrder[img.src] = i;
+      img.title = img.alt;
     });
 
     picsDiv.addEventListener('click', function (e) {
-      const img = e.target.closest('img');
-      if (!img) return;  
-      const wrapper = img.closest('.pic-wrapper');
-      moveToFavourites(img, wrapper);
+      if (e.target.tagName !== 'IMG') return;
+      moveToFavourites(e.target);
     });
 
-    const favouritesDiv = document.getElementById('favourites');
-    favouritesDiv.addEventListener('click', function (e) {
-      const img = e.target.closest('img');
-      if (!img) return;
-      const wrapper = img.closest('.pic-wrapper');
-      revertToMain(img, wrapper);
+    favDiv.addEventListener('click', function (e) {
+      if (e.target.tagName !== 'IMG') return;
+      revertToMain(e.target);
     });
   });
 
-  function moveToFavourites(img, wrapper) {
+  function moveToFavourites(img) {
+
     if (img.classList.contains('selected')) return;
 
     favouriteCount++;
@@ -40,64 +44,61 @@
 
     img.classList.add('selected');
 
-    const favouritesDiv = document.getElementById('favourites');
-    favouritesDiv.appendChild(wrapper);
+    document.getElementById('favorites').appendChild(img);
 
     addAction('Moved ' + img.src.split('/').pop() + ' to favorites');
 
-    const imgNumber = img.id.replace('img-', '');
-    updateConfirmation('Image ' + imgNumber + ' selected as favorite number ' + favouriteCount + '.');
-
-    if (favouriteCount === totalImages) {
-      updateConfirmation('All images have been selected!');
+    if (favouriteCount === total) {
+      setConfirmation('All images have been selected!');
+    } else {
+      setConfirmation('Image ' + ' selected as favorite number ' + favouriteCount + '.');
     }
 
     updateCounter();
   }
 
-  function revertToMain(img, wrapper) {
+  function revertToMain(img) {
     favouriteCount--;
     remaining++;
 
     img.classList.remove('selected');
 
     const picsDiv = document.getElementById('pics');
-    const siblings = Array.from(picsDiv.querySelectorAll('.pic-wrapper'));
-    const targetIndex = originalOrder[img.id];
+    const siblings = Array.from(picsDiv.querySelectorAll('img.mandela'));
+    const targetIdx = originalOrder[img.src];
 
     let inserted = false;
     for (let i = 0; i < siblings.length; i++) {
-      const sibImg = siblings[i].querySelector('img');
-      if (originalOrder[sibImg.id] > targetIndex) {
-        picsDiv.insertBefore(wrapper, siblings[i]);
+      if (originalOrder[siblings[i].src] > targetIdx) {
+        picsDiv.insertBefore(img, siblings[i]);
         inserted = true;
         break;
       }
     }
-    if (!inserted) {
-      picsDiv.appendChild(wrapper);
-    }
+    if (!inserted) picsDiv.appendChild(img);
 
     addAction('Reverted ' + img.src.split('/').pop() + ' back to the main list');
-
-    updateConfirmation('Image reverted. ' + remaining + ' image(s) remaining.');
+    setConfirmation('Image reverted. ' + remaining + ' image(s) remaining.');
 
     updateCounter();
   }
 
   function addAction(message) {
-    const actionsList = document.getElementById('actions');
     const li = document.createElement('li');
     li.textContent = message;
-    actionsList.appendChild(li);
+    document.getElementById('actions').appendChild(li);
   }
 
-  function updateConfirmation(message) {
-    const confirmDiv = document.getElementById('confirmation');
-    confirmDiv.textContent = message;
+  function setConfirmation(message) {
+    document.getElementById('confirmation').textContent = message;
   }
-  
+
   function updateCounter() {
     document.getElementById('remaining-count').textContent = remaining;
+  }
+
+  function getImgNumber(img) {
+    const match = img.src.match(/(\d+)/);
+    return match ? match[1] : '?';
   }
 })();
